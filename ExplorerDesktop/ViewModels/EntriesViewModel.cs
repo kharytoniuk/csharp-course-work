@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
-using Microsoft.Xaml.Behaviors.Core;
 
 namespace ExplorerDesktop;
 
@@ -13,20 +12,25 @@ public class EntriesViewModel : BaseViewModel
 
     public ICommand DeleteCommand { get; }
     
-    public ICommand NavigateDirectoryCreateCommand { get; }
+    public ICommand CreateDirectoryCommand { get; }
     
-    public IEnumerable<IEntry> Entries => _controller.Entries;
+    public ICommand CreateFileCommand { get; }
+    
+    public IEnumerable<BaseEntry> Entries => _controller.Entries;
 
     public EntriesViewModel(NavigationStore navigationStore, IEntriesController controller)
     {
         _navigationStore = navigationStore;
         _controller = controller;
         _controller.Changed += () => OnPropertyChanged(nameof(Entries));
-        
-        OpenCommand = new ActionCommand(o => _controller.Open((IEntry)o));
-        DeleteCommand = new ActionCommand(o => _controller.Open((IEntry)o));
 
-        NavigateDirectoryCreateCommand = new NavigateCommand<DirectoryCreateViewModel>(navigationStore,
-            () => new DirectoryCreateViewModel(navigationStore, controller));
+        OpenCommand = new ActionCommand<BaseEntry>(_controller.Open);
+        DeleteCommand = new ActionCommand<BaseEntry>(_controller.Delete);
+        
+        CreateDirectoryCommand = new NavigateCommand<CreateDirectoryViewModel>(navigationStore,
+            () => new CreateDirectoryViewModel(navigationStore, controller));
+        
+        CreateFileCommand = new NavigateCommand<CreateFileViewModel>(navigationStore,
+            () => new CreateFileViewModel(navigationStore, controller));
     }
 }

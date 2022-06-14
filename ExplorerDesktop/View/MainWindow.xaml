@@ -8,14 +8,19 @@
         Title="MainWindow" 
         MinWidth="760" MinHeight="450"
         Width="760" Height="450">
-    <ContentControl Content="{Binding CurrentViewModel}">
-        <ContentControl.Resources>
-            <DataTemplate DataType="{x:Type explorerDesktop:EntriesViewModel}">
-                <explorerDesktop:EntriesView/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type explorerDesktop:DirectoryCreateViewModel}">
-                <explorerDesktop:DirectoryCreateView/>
-            </DataTemplate>
-        </ContentControl.Resources>
-    </ContentControl>
+    <Grid>
+        <ContentControl Content="{Binding CurrentViewModel}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type explorerDesktop:EntriesViewModel}">
+                    <explorerDesktop:EntriesView/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type explorerDesktop:CreateDirectoryViewModel}">
+                    <explorerDesktop:CreateView EntryImage="{StaticResource DirectoryImage}"/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type explorerDesktop:CreateFileViewModel}">
+                    <explorerDesktop:CreateView EntryImage="{StaticResource FileImage}"/>
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
+    </Grid>
 </Window>

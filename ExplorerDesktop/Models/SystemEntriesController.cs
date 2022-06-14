@@ -5,24 +5,23 @@ namespace ExplorerDesktop;
 
 public class SystemEntriesController : IEntriesController
 {
-    private Directory _current;
     public event Action? Changed;
 
-    public Directory Current => _current;
+    public Directory Current { get; private set; }
 
-    public IEnumerable<IEntry> Entries => _current.GetEntries();
+    public IEnumerable<BaseEntry> Entries => Current.GetEntries();
     
     public SystemEntriesController()
     {
-        _current = new Directory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile,
+        Current = new Directory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile,
             Environment.SpecialFolderOption.None));
     }
 
-    public void Open(IEntry entry)
+    public void Open(BaseEntry entry)
     {
         if (entry is Directory directory)
         {
-            _current = directory;
+            Current = directory;
         }
         else if (entry is File file)
         {
@@ -32,31 +31,15 @@ public class SystemEntriesController : IEntriesController
         Changed?.Invoke();
     }
 
-    public void Create(IEntry entry)
+    public void Create(BaseEntry entry)
     {
-        if (entry is Directory directory)
-        {
-            System.IO.Directory.CreateDirectory(directory.Path);
-        }
-        else if (entry is File file)
-        {
-            System.IO.File.Create(file.Path);
-        }
-        
+        entry.Create();
         Changed?.Invoke();
     }
 
-    public void Delete(IEntry entry)
+    public void Delete(BaseEntry entry)
     {
-        if (entry is Directory directory)
-        {
-            System.IO.Directory.Delete(directory.Path);
-        }
-        else if (entry is File file)
-        {
-            System.IO.File.Delete(file.Path);
-        }
-        
+        entry.Delete();
         Changed?.Invoke();
     }
 }

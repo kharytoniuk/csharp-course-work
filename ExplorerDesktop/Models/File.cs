@@ -21,4 +21,14 @@ public class File : BaseEntry
             }
         }.Start();
     }
+
+    public override void Create()
+    {
+        System.IO.File.Create(Path);
+    }
+
+    public override void Delete()
+    {
+        System.IO.File.Delete(Path);
+    }
 }

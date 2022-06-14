@@ -9,11 +9,12 @@ public interface IEntriesController
     
     public Directory Current { get; }
     
-    public IEnumerable<IEntry> Entries { get; }
-    
-    public void Open(IEntry entry);
-    
-    public void Create(IEntry entry);
+    public IEnumerable<BaseEntry> Entries { get; }
 
-    public void Delete(IEntry entry);
+    public void Open(BaseEntry entry);
+    
+    public void Create(BaseEntry entry);
+
+    public void Delete(BaseEntry entry);
+
 }

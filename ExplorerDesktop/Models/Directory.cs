@@ -15,10 +15,20 @@ public class Directory : BaseEntry
     {
         
     }
-    
-    public IEnumerable<IEntry> GetEntries()
+
+    public override void Create()
     {
-        var entries = new List<IEntry>();
+        System.IO.Directory.CreateDirectory(Path);
+    }
+
+    public override void Delete()
+    {
+        System.IO.Directory.Delete(Path);
+    }
+
+    public IEnumerable<BaseEntry> GetEntries()
+    {
+        var entries = new List<BaseEntry>();
         var directoryInfo = new DirectoryInfo(Path);
 
         foreach (var directory in directoryInfo.GetDirectories())

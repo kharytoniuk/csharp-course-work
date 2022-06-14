@@ -2,12 +2,20 @@
 
 namespace ExplorerDesktop;
 
-public class DelegateCommand : BaseCommand
+public class DelegateCommand : DelegateCommand<object?>
 {
-    private readonly Action<object?> _onExecute;
-    private readonly Predicate<object?> _canExecute;
+    public DelegateCommand(Action<object?> onExecute, Predicate<object?> canExecute) 
+        : base(onExecute, canExecute)
+    {
+    }
+}
 
-    public DelegateCommand(Action<object?> onExecute, Predicate<object?> canExecute)
+public class DelegateCommand<T> : BaseCommand
+{
+    private readonly Action<T> _onExecute;
+    private readonly Predicate<T> _canExecute;
+
+    public DelegateCommand(Action<T> onExecute, Predicate<T> canExecute)
     {
         _onExecute = onExecute;
         _canExecute = canExecute;
@@ -15,11 +23,16 @@ public class DelegateCommand : BaseCommand
 
     public override void Execute(object? parameter)
     {
-        _onExecute(parameter);
+        if (parameter == null)
+        {
+            return;
+        }
+
+        _onExecute((T)parameter);
     }
 
     public override bool CanExecute(object? parameter)
     {
-        return _canExecute(parameter);
+        return parameter != null && _canExecute((T)parameter);
     }
 }
