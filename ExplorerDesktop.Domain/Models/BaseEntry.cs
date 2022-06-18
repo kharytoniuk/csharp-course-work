@@ -11,8 +11,4 @@ public abstract class BaseEntry
         Name = name;
         Path = path;
     }
-
-    public abstract void Create();
-    
-    public abstract void Delete();
 }

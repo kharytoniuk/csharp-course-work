@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 
 namespace ExplorerDesktop;
 
@@ -20,15 +19,5 @@ public class File : BaseEntry
                 UseShellExecute = true
             }
         }.Start();
-    }
-
-    public override void Create()
-    {
-        System.IO.File.Create(Path);
-    }
-
-    public override void Delete()
-    {
-        System.IO.File.Delete(Path);
     }
 }

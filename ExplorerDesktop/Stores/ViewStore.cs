@@ -2,7 +2,7 @@
 
 namespace ExplorerDesktop;
 
-public class NavigationStore
+public class ViewStore
 {
     private BaseViewModel _currentViewModel;
     public event Action? Changed;

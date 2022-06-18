@@ -12,11 +12,11 @@ public class EntryTypeImageConverter : IValueConverter
     {
         var image = new DrawingImage();
 
-        if (value is Directory)
+        if (value is Directory directory)
         {
-            if (Application.Current.TryFindResource("DirectoryImage") is DrawingImage drawingImage)
+            if (Application.Current.TryFindResource("DirectoryImage") is DrawingImage directoryImage)
             {
-                image = drawingImage;
+                image = directoryImage;
             }
         }
         else if (value is File)

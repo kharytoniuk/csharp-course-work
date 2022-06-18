@@ -2,17 +2,15 @@
 
 public class MainViewModel : BaseViewModel
 {
-    private readonly NavigationStore _navigationStore;
-    private readonly IEntriesController _controller;
-
-    public BaseViewModel CurrentViewModel => _navigationStore.CurrentViewModel;
+    private readonly ViewStore _store;
+    
+    public BaseViewModel CurrentViewModel => _store.CurrentViewModel;
         
-    public MainViewModel(NavigationStore navigationStore, IEntriesController controller)
+    public MainViewModel(ViewStore store, ViewModelFactory<EntriesViewModel> factory)
     {
-        _navigationStore = navigationStore;
-        _controller = controller;
-
-        navigationStore.Changed += () => OnPropertyChanged(nameof(CurrentViewModel));
-        navigationStore.CurrentViewModel = new EntriesViewModel(navigationStore, controller);
+        _store = store;
+        
+        store.Changed += () => OnPropertyChanged(nameof(CurrentViewModel));
+        store.CurrentViewModel = factory();
     }
 }

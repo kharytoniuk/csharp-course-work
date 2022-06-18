@@ -21,11 +21,6 @@ public class ActionCommand<T> : BaseCommand
 
     public override void Execute(object? parameter)
     {
-        if (parameter == null)
-        {
-            return;
-        }
-
         _onExecute((T)parameter);
     }
 }

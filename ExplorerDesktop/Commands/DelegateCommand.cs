@@ -23,16 +23,11 @@ public class DelegateCommand<T> : BaseCommand
 
     public override void Execute(object? parameter)
     {
-        if (parameter == null)
-        {
-            return;
-        }
-
         _onExecute((T)parameter);
     }
 
     public override bool CanExecute(object? parameter)
     {
-        return parameter != null && _canExecute((T)parameter);
+        return _canExecute((T)parameter);
     }
 }

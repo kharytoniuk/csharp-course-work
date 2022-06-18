@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using ExplorerDesktop.Domain;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ExplorerDesktop
@@ -11,19 +12,7 @@ namespace ExplorerDesktop
         public App()
         {
             IServiceCollection services = new ServiceCollection();
-
-            /*var store = new GoogleServiceStore();
-            var googleAuth = new GoogleAuth(store);
-
-            services.AddSingleton(store);*/
-            services.AddSingleton<NavigationStore>();
-            services.AddSingleton<IEntriesController, SystemEntriesController>();
-            services.AddSingleton<MainViewModel>();
-            services.AddSingleton(provider => new MainWindow
-            {
-                DataContext = provider.GetRequiredService<MainViewModel>()
-            });
-
+            ConfigureServices(services);
             _serviceProvider = services.BuildServiceProvider();
         }
         
@@ -33,6 +22,56 @@ namespace ExplorerDesktop
             
             MainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             MainWindow.Show();
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services.AddScoped<ViewStore>();
+            services.AddScoped<EntryStore>();
+            services.AddScoped<IRepository<BaseEntry>, EntriesRepository>();
+            services.AddScoped<HistoryNavigationService>();
+
+            services.AddSingleton<ViewModelFactory<EntriesViewModel>>(provider =>
+            {
+                return () => new EntriesViewModel(provider.GetRequiredService<ViewStore>(),
+                    provider.GetRequiredService<HistoryNavigationService>(),
+                    provider.GetRequiredService<IRepository<BaseEntry>>(),
+                    provider.GetRequiredService<ViewModelFactory<CreateDirectoryViewModel>>(),
+                    provider.GetRequiredService<ViewModelFactory<CreateFileViewModel>>(),
+                    provider.GetRequiredService<ViewModelFactory<FilePropertiesViewModel>>(),
+                    provider.GetRequiredService<ViewModelFactory<DirectoryPropertiesViewModel>>());
+            });
+            services.AddSingleton<ViewModelFactory<CreateFileViewModel>>(provider =>
+            {
+                return () => new CreateFileViewModel(provider.GetRequiredService<ViewStore>(),
+                    provider.GetRequiredService<HistoryNavigationService>(),
+                    provider.GetRequiredService<IRepository<BaseEntry>>(),
+                    provider.GetRequiredService<ViewModelFactory<EntriesViewModel>>());
+            });
+            services.AddSingleton<ViewModelFactory<CreateDirectoryViewModel>>(provider =>
+            {
+                return () => new CreateDirectoryViewModel(provider.GetRequiredService<ViewStore>(),
+                    provider.GetRequiredService<HistoryNavigationService>(),
+                    provider.GetRequiredService<IRepository<BaseEntry>>(),
+                    provider.GetRequiredService<ViewModelFactory<EntriesViewModel>>());
+            });
+            services.AddSingleton<ViewModelFactory<FilePropertiesViewModel>>(provider =>
+            {
+                return () => new FilePropertiesViewModel(provider.GetRequiredService<ViewStore>(),
+                    provider.GetRequiredService<ViewModelFactory<EntriesViewModel>>());
+            });
+            services.AddSingleton<ViewModelFactory<DirectoryPropertiesViewModel>>(provider =>
+            {
+                return () => new DirectoryPropertiesViewModel(provider.GetRequiredService<ViewStore>(),
+                    provider.GetRequiredService<ViewModelFactory<EntriesViewModel>>());
+            });
+
+            services.AddSingleton<MainViewModel>();
+            
+            services.AddSingleton(provider => new MainWindow
+            {
+                DataContext = provider.GetRequiredService<MainViewModel>()
+            });
         }
     }
 }

@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:explorerDesktop="clr-namespace:ExplorerDesktop"
         mc:Ignorable="d"
-        Title="MainWindow" 
         MinWidth="760" MinHeight="450"
         Width="760" Height="450">
     <Grid>
@@ -19,6 +18,12 @@
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type explorerDesktop:CreateFileViewModel}">
                     <explorerDesktop:CreateView EntryImage="{StaticResource FileImage}"/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type explorerDesktop:FilePropertiesViewModel}">
+                    <explorerDesktop:FilePropertiesView/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type explorerDesktop:DirectoryPropertiesViewModel}">
+                    <explorerDesktop:DirectoryPropertiesView/>
                 </DataTemplate>
             </ContentControl.Resources>
         </ContentControl>

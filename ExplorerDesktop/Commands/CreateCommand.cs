@@ -1,28 +1,37 @@
 ﻿using System;
 using System.IO;
+using ExplorerDesktop.Domain;
 
 namespace ExplorerDesktop;
 
 public class CreateCommand<TEntry> : BaseCommand
     where TEntry : BaseEntry
 {
-    private readonly NavigationStore _navigationStore;
-    private readonly IEntriesController _controller;
+    private readonly ViewStore _store;
+    private readonly HistoryNavigationService _service;
+    private readonly IRepository<BaseEntry> _repository;
     private readonly Func<string, string, TEntry> _instance;
-    
-    public CreateCommand(NavigationStore navigationStore, IEntriesController controller, Func<string, string, TEntry> instance)
+    private readonly ViewModelFactory<EntriesViewModel> _factory;
+
+    public CreateCommand(ViewStore store,
+        HistoryNavigationService service, 
+        IRepository<BaseEntry> repository, 
+        Func<string, string, TEntry> instance, 
+        ViewModelFactory<EntriesViewModel> factory)
     {
-        _navigationStore = navigationStore;
-        _controller = controller;
+        _store = store;
+        _service = service;
+        _repository = repository;
         _instance = instance;
+        _factory = factory;
     }
     
     public override void Execute(object? parameter)
     {
         var name = (string)(parameter ?? string.Empty);
-        var path = Path.Combine(_controller.Current.Path, name);
+        var path = Path.Combine(_service.Current.Path, name);
         
-        _controller.Create(_instance(name, path));
-        _navigationStore.CurrentViewModel = new EntriesViewModel(_navigationStore, _controller);
+        _repository.Create(_instance(name, path));
+        _store.CurrentViewModel = _factory();
     }
 }
